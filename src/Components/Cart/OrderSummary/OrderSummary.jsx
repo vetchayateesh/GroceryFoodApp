@@ -2,7 +2,7 @@ import { Button, useMediaQuery } from '@mui/material';
 import { groceryContext } from '../../Layout/Layout';
 import { useContext } from 'react';
 import { checkoutContext } from '../Cart';
-import { convertUsdToInr, formatInr } from '../../../utils/utils';
+import { DEFAULT_DELIVERY_CHARGE, formatInr } from '../../../utils/utils';
 
 const OrderSummary = () => {
     // Get Cart Items from Context
@@ -13,8 +13,11 @@ const OrderSummary = () => {
     // Media Query
     const isMediumScreen = useMediaQuery('(max-width:1024px)');
 
-    const subtotal = Number.parseFloat(cartItems.reduce((total, item) => total + Number.parseFloat(item.total), 0));
-    const deliveryCharge = convertUsdToInr(5.99);
+    const subtotal = cartItems.reduce((total, item) => {
+        const itemTotal = Number.parseFloat(item.total);
+        return total + (Number.isNaN(itemTotal) ? 0 : itemTotal);
+    }, 0);
+    const deliveryCharge = DEFAULT_DELIVERY_CHARGE;
 
     return (
         <div className='flex justify-center md:pt-16 col md:col-span-4 lg:col-span-1'>

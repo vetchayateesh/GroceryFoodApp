@@ -2,7 +2,7 @@ import { Button, Container, useMediaQuery } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import ProductCard, { ProductCardSkeleton } from '../../Products/ProductCard/ProductCard';
 import { useNavigate } from 'react-router-dom';
-import { products } from '../../../store/products';
+import { productsWithEightItems } from '../../../store/expandedProducts';
 import { convertUsdToInr } from '../../../utils/utils';
 
 const EnjoyOurFreshGroceryItems = () => {
@@ -16,22 +16,14 @@ const EnjoyOurFreshGroceryItems = () => {
 
     // Get Grocery Items
     useEffect(() => {
-        const getData = async function () {
-            const url = `https://api.npoint.io/bc3d1b1bc1a0fde36701/${selectedCategory}`
-            try {
-                const res = await fetch(url)
-                const data = await res.json();
-                setItems(data.items.slice(0, 3).map((item) => ({
-                    ...item,
-                    price: convertUsdToInr(item.price),
-                    currency: 'INR',
-                })))
-                setIsLoading(false)
+        const categoryItems = productsWithEightItems[selectedCategory]?.items || [];
 
-            } catch (error) {
-                throw new Error('EnjoyFreshItems Fetch Failed', error)
-            }
-        }();
+        setItems(categoryItems.slice(0, 3).map((item) => ({
+            ...item,
+            price: convertUsdToInr(item.price),
+            currency: 'INR',
+        })));
+        setIsLoading(false);
     }, [selectedCategory])
 
     return (

@@ -10,6 +10,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Fade from "@mui/material/Fade";
 import logo_black from "../../assets/Logo_black.png";
 import {
+  Badge,
   Button,
   Container,
   Drawer,
@@ -198,8 +199,14 @@ const Navbar = (props) => {
   }, []);
 
   const navigate = useNavigate();
-  const { userLoggedInState } = React.useContext(groceryContext);
+  const { userLoggedInState, cartItemsState } = React.useContext(groceryContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = userLoggedInState;
+  const [cartItems] = cartItemsState;
+
+  const cartItemsCount = cartItems.reduce((total, item) => {
+    const quantity = Number.parseFloat(item.quantity);
+    return total + (Number.isNaN(quantity) ? 1 : quantity);
+  }, 0);
 
   const [openAlert, setOpenAlert] = React.useState(false);
 
@@ -284,7 +291,13 @@ const Navbar = (props) => {
                             sx={{ textTransform: "capitalize" }}
                             color="warning"
                           >
-                            <ShoppingCartRounded fontSize="inherit" />
+                            <Badge
+                              badgeContent={cartItemsCount}
+                              color="error"
+                              max={99}
+                            >
+                              <ShoppingCartRounded fontSize="inherit" />
+                            </Badge>
                           </IconButton>
                         </span>
                       </Tooltip>

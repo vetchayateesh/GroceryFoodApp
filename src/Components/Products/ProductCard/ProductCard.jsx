@@ -5,6 +5,7 @@ import { groceryContext } from '../../Layout/Layout';
 import { handleSessionStorage } from '../../../utils/utils';
 import SuccessAlert from '../../SuccessAlert/SuccessAlert';
 import { formatInr } from '../../../utils/utils';
+import defaultProductImage from '../../../assets/icons/ful_kopi_icon.png';
 
 const ProductCard = ({ product }) => {
     const { img, name, price, reviews, reviewCount, quantity, unit } = product;
@@ -19,19 +20,27 @@ const ProductCard = ({ product }) => {
 
     //Handle Add To Cart
     const handleAddToCartBtn = () => {
+        const productQuantity = Number.parseFloat(product.quantity) || 1;
+        const productPrice = Number.parseFloat(product.price) || 0;
+
         let targetedProduct = {
             ...product,
             currency: 'INR',
+            quantity: productQuantity,
+            total: Number.parseFloat((productQuantity * productPrice).toFixed(2))
         };
         let latestCartItems = cartItems;
 
         const isTargetedProductAlreadyExist = cartItems.find(item => item.id === product.id)
         if (isTargetedProductAlreadyExist) {
+            const updatedQuantity = (Number.parseFloat(isTargetedProductAlreadyExist.quantity) || 0) + 1;
+            const updatedPrice = Number.parseFloat(isTargetedProductAlreadyExist.price) || 0;
+
             targetedProduct = {
                 ...isTargetedProductAlreadyExist,
                 currency: 'INR',
-                quantity: isTargetedProductAlreadyExist.quantity + 1,
-                total: ((isTargetedProductAlreadyExist.quantity + 1) * isTargetedProductAlreadyExist.price).toFixed(2)
+                quantity: updatedQuantity,
+                total: Number.parseFloat((updatedQuantity * updatedPrice).toFixed(2))
             }
             latestCartItems = cartItems.filter(item => item.id !== targetedProduct.id)
         }
@@ -62,6 +71,10 @@ const ProductCard = ({ product }) => {
                         <img className='md:max-h-28 max-h-24'
                             loading='lazy'
                             src={img}
+                            onError={(event) => {
+                                event.currentTarget.onerror = null;
+                                event.currentTarget.src = defaultProductImage;
+                            }}
                             alt={name} />
                     </div>
                     <div className='p-1.5'>

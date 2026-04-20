@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { groceryContext } from '../../Layout/Layout';
 import { useContext, useState } from 'react';
 import GoBackButton from '../GoBackButton/GoBackButton';
-import { handleSessionStorage } from '../../../utils/utils';
+import { DEFAULT_DELIVERY_CHARGE, handleSessionStorage, WHATSAPP_ORDER_NUMBER } from '../../../utils/utils';
 import PopUpDialog from '../../PopUpDialog/PopUpDialog';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,8 +18,60 @@ const DeliveryForm = () => {
 
     // Handle PlaceOrder
     const onSubmit = (data) => {
-        setOpenDialog(!openDialog)
-        // Setting DeliveryDetails in Storage
+        const subtotal = cartItems.reduce((total, item) => {
+            const quantity = Number.parseFloat(item.quantity) || 1;
+            const price = Number.parseFloat(item.price) || 0;
+            const itemTotal = Number.parseFloat(item.total);
+
+            return total + (Number.isNaN(itemTotal) ? quantity * price : itemTotal);
+        }, 0);
+
+        const deliveryCharge = DEFAULT_DELIVERY_CHARGE;
+        const grandTotal = subtotal + deliveryCharge;
+
+        const payload = {
+            customer: data,
+            items: cartItems.map((item) => {
+                const quantity = Number.parseFloat(item.quantity) || 1;
+                const price = Number.parseFloat(item.price) || 0;
+                const itemTotal = Number.parseFloat(item.total);
+
+                return {
+                    name: item.name,
+                    unit: item.unit,
+                    quantity,
+                    total: Number.isNaN(itemTotal) ? quantity * price : itemTotal,
+                };
+            }),
+            subtotal,
+            deliveryCharge,
+            total: grandTotal,
+        };
+
+        const itemDetails = payload.items
+            .map((item, index) => `${index + 1}. ${item.name} - Qty: ${item.quantity} ${item.unit} - INR ${Number.parseFloat(item.total).toFixed(2)}`)
+            .join('\n');
+
+        const whatsappMessage = [
+            'New Grocery Order',
+            '',
+            `Customer: ${data.full_name}`,
+            `Phone: ${data.phone}`,
+            `Email: ${data.email}`,
+            `Address: ${data.address}`,
+            '',
+            'Items:',
+            itemDetails,
+            '',
+            `Subtotal: INR ${subtotal.toFixed(2)}`,
+            `Delivery Charge: INR ${deliveryCharge.toFixed(2)}`,
+            `Total: INR ${grandTotal.toFixed(2)}`,
+        ].join('\n');
+
+        const whatsappLink = `https://wa.me/${WHATSAPP_ORDER_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappLink, '_blank', 'noopener,noreferrer');
+
+        setOpenDialog(true)
         handleSessionStorage('set', 'deliveryDetails', data)
     }
     // Handle Dialog 
@@ -27,7 +79,7 @@ const DeliveryForm = () => {
         // Reset the Cart_items
         handleSessionStorage('remove', 'cartItems')
         setCartItems([])
-        setOpenDialog(!openDialog)
+        setOpenDialog(false)
         navigate('/')
     }
 
@@ -60,8 +112,8 @@ const DeliveryForm = () => {
                                 defaultValue={'John Doe'}
                                 label='Full Name'
                                 size='small'
-                                error={errors.email ? true : false}
-                                helperText={errors.email ? errors.email.message : ''}
+                                error={errors.full_name ? true : false}
+                                helperText={errors.full_name ? errors.full_name.message : ''}
                                 fullWidth
                                 color='success'
                                 variant='outlined' />
@@ -82,6 +134,25 @@ const DeliveryForm = () => {
                                 error={errors.email ? true : false}
                                 helperText={errors.email ? errors.email.message : ''}
                                 fullWidth
+                                color='success'
+                                variant='outlined' />
+
+                            {/* Phone */}
+                            <TextField
+                                {...register('phone', {
+                                    required: 'Phone number is required',
+                                    pattern: {
+                                        value: /^(\+91)?[6-9]\d{9}$/,
+                                        message: 'Enter a valid Indian mobile number'
+                                    }
+                                })}
+                                defaultValue={'7013639877'}
+                                label='Phone Number'
+                                size='small'
+                                error={errors.phone ? true : false}
+                                helperText={errors.phone ? errors.phone.message : ''}
+                                fullWidth
+                                placeholder='+91XXXXXXXXXX'
                                 color='success'
                                 variant='outlined' />
 

@@ -3,6 +3,7 @@ import ReviewCard, { ReviewCardSkeleton } from './ReviewCard/ReviewCard';
 import { Container } from '@mui/material';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Pagination, Autoplay, FreeMode } from "swiper";
+import { indiaCustomerReviews } from '../../../store/indiaReviews';
 import "swiper/css";
 
 SwiperCore.use([Pagination, Autoplay]);
@@ -13,20 +14,10 @@ const CustomersReview = () => {
     const [users, setUsers] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Get Users
+    // Load curated India-only reviews
     useEffect(() => {
-        const getUsers = async function () {
-            try {
-                const res = await fetch('https://randomuser.me/api/?results=9');
-                const user = await res.json()
-                setUsers(user.results)
-                setIsLoaded(!isLoaded)
-            }
-            catch (error) {
-                throw new Error('Customers_Review Fetch Failed', error)
-            }
-
-        }();
+        setUsers(indiaCustomerReviews)
+        setIsLoaded(true)
     }, [])
 
 
@@ -61,7 +52,7 @@ const CustomersReview = () => {
                             }
                         }
                     }
-                    autoplay={{ delay: 1000, disableOnInteraction: false }}
+                    autoplay={{ delay: 1600, disableOnInteraction: false }}
                     speed={700}
                     modules={[Pagination, Autoplay, FreeMode]}
                     freeMode={true}

@@ -1,10 +1,11 @@
 import { Container, Fade } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductCard, { ProductCardSkeleton } from './ProductCard/ProductCard';
 import { useParams } from 'react-router-dom';
 import { convertUsdToInr } from '../../utils/utils';
+import { productsWithEightItems } from '../../store/expandedProducts';
 
-const Products = ({ categoryProducts }) => {
+const Products = () => {
     const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const { categoryName } = useParams();
@@ -20,29 +21,13 @@ const Products = ({ categoryProducts }) => {
 
     // Get Products 
     useEffect(() => {
-        const getData = async function () {
-            const allProductsUrl = 'https://api.npoint.io/bc3d1b1bc1a0fde36701';
-            const categoryProductsUrl = `https://api.npoint.io/bc3d1b1bc1a0fde36701/${categoryName === 'meat' ? 0
-                : categoryName === 'vegetables' ? 1
-                    : categoryName === 'fruits' ? 2
-                        : categoryName === 'dairy' ? 3
-                            : categoryName === 'grains' ? 4
-                                : 2}`
-            try {
-                const res = await fetch(categoryName ? categoryProductsUrl : allProductsUrl)
-                const data = await res.json();
-                const categoryItems = categoryName
-                    ? data.items
-                    : data[0].items.concat(data[1].items, data[2].items, data[3].items, data[4].items);
+        const categoryItems = categoryName
+            ? productsWithEightItems.find((category) => category.category.toLowerCase() === categoryName)?.items || []
+            : productsWithEightItems.flatMap((category) => category.items);
 
-                setProducts(convertProductPrices(categoryItems))
-                setIsLoading(!isLoading)
-            }
-            catch (error) {
-                throw new Error('Products Fetch Failed', error)
-            }
-        }();
-    }, [])
+        setProducts(convertProductPrices(categoryItems));
+        setIsLoading(false);
+    }, [categoryName])
 
     return (
         <main className='min-h-screen space-y-5 pt-20 mb-9'>

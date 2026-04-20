@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { groceryContext } from '../../Layout/Layout';
 import { formatInr, handleSessionStorage } from '../../../utils/utils';
 import PopUpDialog from '../../PopUpDialog/PopUpDialog';
+import defaultProductImage from '../../../assets/icons/ful_kopi_icon.png';
 
 const CartItemCard = ({ item }) => {
     const { id, name, img, quantity, unit, price, total } = item;
@@ -37,6 +38,10 @@ const CartItemCard = ({ item }) => {
                     <div className='col flex items-center justify-center'>
                         <img
                             src={img}
+                            onError={(event) => {
+                                event.currentTarget.onerror = null;
+                                event.currentTarget.src = defaultProductImage;
+                            }}
                             className='lg:h-16 h-10'
                             alt={name} />
                     </div>

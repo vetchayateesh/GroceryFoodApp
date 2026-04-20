@@ -3,7 +3,7 @@ import React from 'react';
 import { Star } from '@mui/icons-material';
 
 const ReviewCard = ({ user }) => {
-    const { name, picture } = user;
+    const { name, picture, city, state, reviewText } = user;
 
     return (
         <div className='rounded-lg mx-auto cursor-pointer reviewCard px-6 md:px-6 sm:px-4 py-4 md:space-y-3.5 sm:space-y-2.5 space-y-3.5 transition-all max-w-[23rem] shadow-sm duration-300'>
@@ -20,12 +20,12 @@ const ReviewCard = ({ user }) => {
                     </h3>
 
                     {/* Title */}
-                    <span className='text-xs font-normal'>Happy Customer</span>
+                    <span className='text-xs font-normal'>Happy Customer from {city}, {state}</span>
                 </div>
             </header>
 
             {/* Review Text */}
-            <p className='text-sm text-justify  sm:text-xs md:text-sm tracking-normal'> Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat veritatis, aut voluptates officia ipsa modi .</p>
+            <p className='text-sm text-justify  sm:text-xs md:text-sm tracking-normal'>{reviewText}</p>
 
             {/* Review Stars */}
             <footer className='text-lg space-x-0.5'>

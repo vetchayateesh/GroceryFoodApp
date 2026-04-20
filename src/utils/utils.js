@@ -15,6 +15,8 @@ export const handleSessionStorage = (action, key, target) => {
 };
 
 export const USD_TO_INR_RATE = 83;
+export const WHATSAPP_ORDER_NUMBER = "917013639877";
+export const DEFAULT_DELIVERY_CHARGE = 60;
 
 export const convertUsdToInr = (value) => {
   const amount = Number.parseFloat(value);
