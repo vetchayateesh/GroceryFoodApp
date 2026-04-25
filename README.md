@@ -3,7 +3,6 @@
 A responsive grocery shopping web app built with React and Vite.
 
 This project lets users browse products, add items to cart, complete delivery details, and place orders through WhatsApp with an auto-generated order message.
-<img width="1903" height="927" alt="ProjectPic1" src="https://github.com/user-attachments/assets/ed376e98-f69f-40da-9e50-a2c66e2a8bbb" />
 
 ## 1. Project Overview
 
@@ -189,6 +188,14 @@ npm run preview
 npm run lint
 ```
 
+### Screenshorts
+<img width="1903" height="927" alt="ProjectPic1" src="https://github.com/user-attachments/assets/d151fa47-c116-435e-a93b-12bd09c0bc80" />
+<img width="1900" height="930" alt="ProjectPic2" src="https://github.com/user-attachments/assets/45f50ab0-40c8-4c0c-8e52-ed4abd8f5fbe" />
+<img width="1900" height="848" alt="ProjectPic3" src="https://github.com/user-attachments/assets/5aae93a8-0fd6-4eb6-8c26-85d050b339b7" />
+<img width="1900" height="848" alt="ProjectPic3" src="https://github.com/user-attachments/assets/195910d6-783e-423d-a440-c2a5d8b0c411" />
+<img width="1906" height="929" alt="ProjectPic5" src="https://github.com/user-attachments/assets/dbb833e5-0e32-435a-94eb-3e6179e46f4e" />
+
+
 ## 10. NPM Scripts
 
 - `npm run dev` - Start Vite development server
@@ -202,6 +209,7 @@ npm run lint
 
 - Stop the process using port 3000.
 - Restart with `npm run dev`.
+
 
 ### Cart data looks outdated
 
