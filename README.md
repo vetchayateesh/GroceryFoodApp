@@ -3,6 +3,7 @@
 A responsive grocery shopping web app built with React and Vite.
 
 This project lets users browse products, add items to cart, complete delivery details, and place orders through WhatsApp with an auto-generated order message.
+<img width="1903" height="927" alt="ProjectPic1" src="https://github.com/user-attachments/assets/ed376e98-f69f-40da-9e50-a2c66e2a8bbb" />
 
 ## 1. Project Overview
 
